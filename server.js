@@ -3,13 +3,16 @@ const app = express();
 const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
+const PORT = process.env.PORT || 5000;
+const path = require("path")
+
 // const addTestUser = require('./utils/seedUsers');
+app.use(express.json());
 
 dotenv.config();
 connectDB();
 
 app.use(cors());
-app.use(express.json());
 
 app.get('/', (req, res) => res.send('API Running'));
 
@@ -23,5 +26,4 @@ app.get("*",function(req,res){
     res.sendFile(path.join(__dirname,'./frontend/build/index.html'))
 })
 
-const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
