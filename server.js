@@ -1,35 +1,28 @@
 const express = require('express');
-const app = express();
-require('dotenv').config()
-const dbConfig = require('./config/db')
 const cors = require('cors');
+const app = express();
+require('dotenv').config();
+const dbConfig = require('./config/db');
+const PORT = process.env.PORT || 5000;
 
-
-// const addTestUser = require('./utils/seedUsers');
+// Middleware
 app.use(express.json());
 
-app.use(cors());
+app.use(cors({
+  origin: 'https://mern-ten-ecru.vercel.app',
+  credentials: true
+}));
 
-app.get('/', (req, res) => res.send('API Running'));
-
+// API Routes
 const userRoutes = require('./routes/userRoutes');
-app.use('/api/users', userRoutes); //
+app.use('/api/users', userRoutes);
 
-// static files
-const path = require("path")
-app.use(express.static(path.join(__dirname,'./client/build')))
-
-// this is in old express
-// app.get('*', function(req, res) {
-//   res.sendFile(path.join(__dirname, './client/build/index.html'));
-// });
-
-// this only works in express 5
-app.get(/.*/, function(req, res) {
-  // res.sendFile(path.join(__dirname, './client/build/index.html'));
-  console.log("Serving React frontend from:", path.join(__dirname, './client/build/index.html'));
+// Serve React frontend
+const path = require('path');
+app.use(express.static(path.join(__dirname, './client/build')));
+app.get(/.*/, (req, res) => {
+  res.sendFile(path.join(__dirname, './client/build/index.html'));
 });
 
-
-const PORT = process.env.PORT || 5000;
+// Start server
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
