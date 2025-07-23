@@ -3,13 +3,14 @@ const app = express();
 const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
+dotenv.config();
 const PORT = process.env.PORT;
 const path = require("path")
 
 // const addTestUser = require('./utils/seedUsers');
 app.use(express.json());
 
-dotenv.config();
+
 connectDB();
 
 app.use(cors());
