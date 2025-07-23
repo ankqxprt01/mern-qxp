@@ -5,13 +5,29 @@ require('dotenv').config();
 const dbConfig = require('./config/db');
 const PORT = process.env.PORT || 5000;
 
-// Middleware
-app.use(express.json());
+// ✅ Full CORS configuration
+const allowedOrigins = ['https://mern-ten-ecru.vercel.app', 'http://localhost:3000'];
 
 app.use(cors({
-  origin: 'https://mern-ten-ecru.vercel.app',
-  credentials: true
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like Postman) or whitelisted domains
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 204
 }));
+
+// ✅ Handle preflight requests (OPTIONS)
+app.options('*', cors());
+
+// Middleware
+app.use(express.json());
 
 // API Routes
 const userRoutes = require('./routes/userRoutes');
