@@ -263,10 +263,17 @@ function Login({ onLoginSuccess }) {
 
     try {
       // check the proxy in client packg.json
+      //  runs on live
       const res = await axios.post(`${process.env.REACT_APP_API_BASE}/api/users/login`, {
         email,
         password
       });
+
+      // localhost
+      //   const res = await axios.post('http://localhost:5000/api/users/login', {
+      //   email,
+      //   password
+      // });
 
       if (res.data && res.data.user && res.data.token) {
         const userData = {
