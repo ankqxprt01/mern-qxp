@@ -1,17 +1,13 @@
 const express = require('express');
 const app = express();
-const cors = require('cors');
-const dotenv = require('dotenv');
-const connectDB = require('./config/db');
-dotenv.config();
+require('dotenv').config()
+const dbConfig = require('./config/db')
 const PORT = process.env.PORT;
-const path = require("path")
+const cors = require('cors');
+
 
 // const addTestUser = require('./utils/seedUsers');
 app.use(express.json());
-
-
-connectDB();
 
 app.use(cors());
 
@@ -21,6 +17,7 @@ const userRoutes = require('./routes/userRoutes');
 app.use('/api/users', userRoutes); //
 
 // static files
+const path = require("path")
 app.use(express.static(path.join(__dirname,'./frontend/build')))
 
 app.get("*",function(req,res){
