@@ -26,7 +26,8 @@ app.use(express.static(path.join(__dirname,'./client/build')))
 
 // this only works in express 5
 app.get(/.*/, function(req, res) {
-  res.sendFile(path.join(__dirname, './client/build/index.html'));
+  // res.sendFile(path.join(__dirname, './client/build/index.html'));
+  console.log("Serving React frontend from:", path.join(__dirname, './client/build/index.html'));
 });
 
 
