@@ -20,8 +20,14 @@ app.use('/api/users', userRoutes); //
 const path = require("path")
 app.use(express.static(path.join(__dirname,'./frontend/build')))
 
-app.get("*", function(req, res){
-    res.sendFile(path.join(__dirname,'./frontend/build/index.html'))
-})
+// this is in old express
+// app.get("*",function(req,res){
+//     res.sendFile(path.join(__dirname,'./client/build/index.html'))
+// })
+
+// this only works in express 5
+app.get(/.*/, function(req, res) {
+  res.sendFile(path.join(__dirname, './frontend/build/index.html'));
+});
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
