@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-mongoose.connect(process.env.mongo_url)
+mongoose.connect(process.env.MONGO.URL)
 
 const db = mongoose.connection;
 // hve to chck 2methods 1scnerio  db.on 1st parameter will b normal scnerio weather cooncn succes or not
