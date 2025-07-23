@@ -21,14 +21,14 @@ const path = require("path")
 app.use(express.static(path.join(__dirname,'./client/build')))
 
 // this is in old express
-// app.get('*', function(req, res) {
-//   res.sendFile(path.join(__dirname, './client/build/index.html'));
-// });
-
-// this only works in express 5
-app.get(/.*/, function(req, res) {
+app.get('*', function(req, res) {
   res.sendFile(path.join(__dirname, './client/build/index.html'));
 });
+
+// this only works in express 5
+// app.get(/.*/, function(req, res) {
+//   res.sendFile(path.join(__dirname, './client/build/index.html'));
+// });
 
 
 
