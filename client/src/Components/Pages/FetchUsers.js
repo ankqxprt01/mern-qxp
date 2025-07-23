@@ -105,7 +105,7 @@ function FetchUsers() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("https://qxp-mern.onrender.com/api/users", {
+      const response = await axios.get("https://mern-ef6b.onrender.com/api/users", {
         headers: { Authorization: `Bearer ${token}` }
       });
       setUsers(response.data);
