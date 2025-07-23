@@ -183,7 +183,7 @@ function Login({ onLoginSuccess }) {
     setError('');
 
     try {
-      const res = await axios.post('http://localhost:5000/api/users/login', {
+      const res = await axios.post('https://qxp-mern.onrender.com/api/users/login', {
         email,
         password
       });
