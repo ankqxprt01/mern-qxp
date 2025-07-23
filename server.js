@@ -20,9 +20,6 @@ app.use('/api/users', userRoutes); //
 // Call the user insertion function
 // addTestUser();
 
-const usersRoute = require("./routes/userRoutes");
-app.use('/api/users', usersRoute);
-
 // static files
 app.use(express.static(path.join(__dirname,'./frontend/build')))
 
