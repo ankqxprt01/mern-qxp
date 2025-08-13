@@ -256,10 +256,14 @@ function Login({ onLoginSuccess }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false); // added loading state
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setLoading(true); // show loader
+
+    const start = Date.now(); // start time
 
     try {
       // check the proxy in client packg.json
@@ -283,17 +287,35 @@ function Login({ onLoginSuccess }) {
 
         localStorage.setItem("user", JSON.stringify(userData));
 
-        onLoginSuccess(userData);
+        // 2 seconds loading time
+        const elapsed = Date.now() - start;
+        const remaining = Math.max(0, 5000 - elapsed);
+        setTimeout(() => {
+          setLoading(false);
+          onLoginSuccess(userData);
+        }, remaining);
       } else {
-        setError("Login failed: Missing token or user");
+        throw new Error("Login failed: Missing token or user");
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed');
+      const elapsed = Date.now() - start;
+      const remaining = Math.max(0, 2000 - elapsed);
+      setTimeout(() => {
+        setError(err.response?.data?.message || 'Login failed');
+        setLoading(false);
+      }, remaining);
     }
   };
 
   return (
     <div>
+      {loading && (
+        <div className="loader-wrapper">
+          <div className="spinner"></div>
+          <p className="loading-text">Logging in...</p>
+        </div>
+      )}
+
       <h3>Login</h3>
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
@@ -306,6 +328,7 @@ function Login({ onLoginSuccess }) {
             placeholder="Email"
             type="email"
             required
+            disabled={loading} // disable input while loading
           />
         </div>
 
@@ -317,10 +340,11 @@ function Login({ onLoginSuccess }) {
             placeholder="Password"
             type="password"
             required
+            disabled={loading} // disable input while loading
           />
         </div>
 
-        <button type="submit">Login</button>
+        <button type="submit" disabled={loading}>Login</button>
 
         <p style={{ marginTop: '10px' }}>
           <Link to="/forget-password">Forgot Password?</Link>
@@ -331,7 +355,5 @@ function Login({ onLoginSuccess }) {
 }
 
 export default Login;
-
-
 
 
