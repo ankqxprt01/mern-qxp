@@ -12,6 +12,7 @@
 
 // export default Home;
 
+import { Link } from 'react-router-dom';
 import Admin from './Admin';
 
 function Home({ user, onLogout }) {
@@ -32,10 +33,10 @@ function Home({ user, onLogout }) {
         </a>
       </li>
       <li>
-        <a href="#">
+        <Link to="/about">
           <i class='bx bxs-user-circle'></i>
           <span>About Me</span>
-        </a>
+        </Link>
       </li>
       <li>
         

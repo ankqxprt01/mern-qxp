@@ -87,6 +87,7 @@ import Login from './Components/Pages/Login';
 import Signup from './Components/Pages/Signup';
 import Home from './Components/Pages/Home';
 import Navbar from './Components/Pages/Navbar';
+import About from './Components/Pages/About';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -122,6 +123,18 @@ function App() {
             )
           }
         />
+
+         <Route
+          path="/about"
+          element={
+            user ? (
+              <About user={user} onLogout={handleLogout} />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+
         <Route
           path="/login"
           element={
