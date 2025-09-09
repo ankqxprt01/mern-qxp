@@ -29,40 +29,40 @@ router.get('/', protect, adminOnly, async (req, res) => {
 });
 
 // signup with security quest
-// router.post('/register', async (req, res) => {
-//   const { name, email, password, securityAnswer } = req.body;
+router.post('/register', async (req, res) => {
+  const { name, email, password, securityAnswer } = req.body;
 
-//   if (!name || !email || !password || !securityAnswer) {
-//     return res.status(400).json({ error: 'All fields are required' });
-//   }
+  if (!name || !email || !password || !securityAnswer) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
 
-//   try {
-//     const existingUser = await User.findOne({ email });
-//     if (existingUser) return res.status(400).json({ error: 'Email already in use' });
-
-//     const user = new User({ name, email, password, securityAnswer });
-//     await user.save();
-
-//     res.status(201).json({ message: 'User registered successfully' });
-//   } catch (err) {
-//     res.status(500).json({ error: 'Server error' });
-//   }
-// });
-
-// Signup - POST /api/users/signup for bcrypt
-router.post('/signup', async (req, res) => {
-  const { name, email, password } = req.body;
   try {
     const existingUser = await User.findOne({ email });
-    if (existingUser) return res.status(400).json({ message: 'User already exists' });
+    if (existingUser) return res.status(400).json({ error: 'Email already in use' });
 
-    const user = new User({ name, email, password });
+    const user = new User({ name, email, password, securityAnswer });
     await user.save();
+
     res.status(201).json({ message: 'User registered successfully' });
   } catch (err) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ error: 'Server error' });
   }
 });
+
+// Signup - POST /api/users/signup for bcrypt
+// router.post('/signup', async (req, res) => {
+//   const { name, email, password } = req.body;
+//   try {
+//     const existingUser = await User.findOne({ email });
+//     if (existingUser) return res.status(400).json({ message: 'User already exists' });
+
+//     const user = new User({ name, email, password });
+//     await user.save();
+//     res.status(201).json({ message: 'User registered successfully' });
+//   } catch (err) {
+//     res.status(500).json({ message: 'Server error' });
+//   }
+// });
 
 // simple signup
 // router.post("/signup", async (req, res) => {
@@ -181,79 +181,79 @@ router.delete('/:id', protect, adminOnly, async (req, res) => {
 // });
 
 // forget password
-router.post("/forgetpass", async (req, res) => {
-  const { email, newPassword } = req.body;
+// router.post("/forgetpass", async (req, res) => {
+//   const { email, newPassword } = req.body;
 
-  if (!email || !newPassword) {
-    return res.status(400).json({ message: "Email and new password are required" });
+//   if (!email || !newPassword) {
+//     return res.status(400).json({ message: "Email and new password are required" });
+//   }
+
+//   try {
+//     const user = await User.findOne({ email });
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+
+//     user.password = newPassword; // plain password model schema will hash
+//     await user.save(); //('save') hook for hashing
+
+//     res.json({ message: "Password updated successfully" });
+//   } catch (err) {
+//     console.error("Forget Password Error:", err.message);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// });
+
+// reset pass with secirity quest
+router.post('/recover-password', async (req, res) => {
+  const { email, securityAnswer, newPassword } = req.body;
+
+  if (!email || !securityAnswer || !newPassword) {
+    return res.status(400).json({ error: 'Missing fields' });
   }
 
   try {
     const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    const isMatch = await bcrypt.compare(securityAnswer, user.securityAnswer);
+    if (!isMatch) {
+      return res.status(401).json({ error: 'Security answer is incorrect' });
     }
 
-    user.password = newPassword; // plain password model schema will hash
-    await user.save(); //('save') hook for hashing
+    user.password = newPassword;
+    await user.save();
 
-    res.json({ message: "Password updated successfully" });
+    res.json({ message: 'Password updated successfully' });
   } catch (err) {
-    console.error("Forget Password Error:", err.message);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ error: 'Server error' });
   }
 });
 
-// reset pass with secirity quest
-// router.post('/recover-password', async (req, res) => {
-//   const { email, securityAnswer, newPassword } = req.body;
+// reset with old pass
+router.post('/reset-with-oldpass', async (req, res) => {
+  const { email, oldPassword, newPassword } = req.body;
 
-//   if (!email || !securityAnswer || !newPassword) {
-//     return res.status(400).json({ error: 'Missing fields' });
-//   }
+  if (!email || !oldPassword || !newPassword) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
 
-//   try {
-//     const user = await User.findOne({ email });
-//     if (!user) return res.status(404).json({ error: 'User not found' });
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ error: 'User not found' });
 
-//     const isMatch = await bcrypt.compare(securityAnswer, user.securityAnswer);
-//     if (!isMatch) {
-//       return res.status(401).json({ error: 'Security answer is incorrect' });
-//     }
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) return res.status(401).json({ error: 'Old password is incorrect' });
 
-//     user.password = newPassword;
-//     await user.save();
+    user.password = newPassword; // This will be auto-hashed in pre('save')
+    await user.save();
 
-//     res.json({ message: 'Password updated successfully' });
-//   } catch (err) {
-//     res.status(500).json({ error: 'Server error' });
-//   }
-// });
-
-// // reset with old pass
-// router.post('/reset-with-oldpass', async (req, res) => {
-//   const { email, oldPassword, newPassword } = req.body;
-
-//   if (!email || !oldPassword || !newPassword) {
-//     return res.status(400).json({ error: 'All fields are required' });
-//   }
-
-//   try {
-//     const user = await User.findOne({ email });
-//     if (!user) return res.status(404).json({ error: 'User not found' });
-
-//     const isMatch = await bcrypt.compare(oldPassword, user.password);
-//     if (!isMatch) return res.status(401).json({ error: 'Old password is incorrect' });
-
-//     user.password = newPassword; // This will be auto-hashed in pre('save')
-//     await user.save();
-
-//     res.json({ message: 'Password updated successfully' });
-//   } catch (err) {
-//     console.error('Error resetting with old password:', err);
-//     res.status(500).json({ error: 'Server error' });
-//   }
-// });
+    res.json({ message: 'Password updated successfully' });
+  } catch (err) {
+    console.error('Error resetting with old password:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
 
 
 

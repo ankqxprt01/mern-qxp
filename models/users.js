@@ -22,14 +22,14 @@ const userSchema = new mongoose.Schema(
     },
 
     // security quest
-    // securityAnswer: {
-    //   type: String,
-    //   required: true,
-    // },
-    // securityQuestion: {
-    //   type: String,
-    //   required: false,
-    // },
+    securityAnswer: {
+      type: String,
+      required: true,
+    },
+    securityQuestion: {
+      type: String,
+      required: false,
+    },
   },
   { timestamps: true } 
 );
@@ -40,9 +40,9 @@ userSchema.pre('save', async function (next) {
   this.password = await bcrypt.hash(this.password, 10);
 
   // security quest
-  //  if (this.isModified('securityAnswer')) {
-  //   this.securityAnswer = await bcrypt.hash(this.securityAnswer, 10);
-  // }
+   if (this.isModified('securityAnswer')) {
+    this.securityAnswer = await bcrypt.hash(this.securityAnswer, 10);
+  }
 
   next();
 });
