@@ -302,7 +302,7 @@ function Login({ onLoginSuccess }) {
       }
     } catch (err) {
       const elapsed = Date.now() - start;
-      const remaining = Math.max(0, 1000 - elapsed);
+      const remaining = Math.max(0, 3000 - elapsed);
       setTimeout(() => {
         setError(err.response?.data?.message || 'Login failed');
         setLoading(false);
