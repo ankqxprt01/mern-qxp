@@ -85,6 +85,9 @@ function Signup() {
       setEmail('');
       setPassword('');
       setSecurityAnswer('');
+      setTimeout(() => {
+      window.location.href = "/login"
+      }, 1500); // small delay so user can read success message// it will reload the page
     } catch (err) {
       setMsg(err.response?.data?.error || 'Signup failed');
     }
