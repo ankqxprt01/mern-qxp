@@ -293,6 +293,9 @@ function Login({ onLoginSuccess }) {
         setTimeout(() => {
           setLoading(false);
           onLoginSuccess(userData);
+
+          // 🔥 force refresh to home page after login
+          window.location.href = "/";
         }, remaining);
       } else {
         throw new Error("Login failed: Missing token or user");
@@ -355,5 +358,6 @@ function Login({ onLoginSuccess }) {
 }
 
 export default Login;
+
 
 
