@@ -250,7 +250,8 @@
 // baseurl
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link} from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 function Login({ onLoginSuccess }) {
   const [email, setEmail] = useState('');
@@ -258,7 +259,7 @@ function Login({ onLoginSuccess }) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false); // added loading state
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -294,8 +295,8 @@ function Login({ onLoginSuccess }) {
         onLoginSuccess(userData);
 
       // redirect immediately after login
-        // window.location.href = "/"; // it will reload the page
-         navigate("/");// navigate but dont reload the page
+        window.location.href = "/"; // it will reload the page
+        //  navigate("/");// navigate but dont reload the page
       } else {
         throw new Error("Login failed: Missing token or user");
       }
