@@ -96,7 +96,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: rgba(26, 26, 26, 0.95);
+    background: #000;
     z-index: 1000;
     animation: fadeOut 2s ease 2s forwards;
   }
