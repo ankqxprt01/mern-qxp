@@ -72,7 +72,7 @@ function Signup() {
     e.preventDefault();
 
     try {
-       await axios.post(`${process.env.REACT_APP_API_BASE}/api/users/signup`, {
+       await axios.post(`${process.env.REACT_APP_API_BASE}/api/users/register`, {
       // await axios.post('http://localhost:5000/api/users/register', {
         name,
         email,
