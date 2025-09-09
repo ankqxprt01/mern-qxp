@@ -103,7 +103,6 @@
 // forget pass with old new pass
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // 👈 added for redirect
 
 function ForgetPassword() {
   const [email, setEmail] = useState('');
@@ -114,8 +113,6 @@ function ForgetPassword() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
-
-  const navigate = useNavigate(); // 👈 hook for navigation
 
   const handlePasswordReset = async (e) => {
     e.preventDefault();
@@ -158,7 +155,7 @@ function ForgetPassword() {
 
       // 👇 redirect to login after success
       setTimeout(() => {
-        navigate("/login");
+        window.location.href = "/login"
       }, 1500); // small delay so user can read success message
     } catch (err) {
       setError(err.response?.data?.error || 'Password reset failed');
