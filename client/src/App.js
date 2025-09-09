@@ -91,6 +91,7 @@ import About from './Components/Pages/About';
 
 function App() {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true); // <-- added loading state
 
   // Load user from localStorage on first render
   useEffect(() => {
@@ -98,6 +99,7 @@ function App() {
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
+    setLoading(false); // <-- mark loading as done
   }, []);
 
   const handleLoginSuccess = (userData) => {
@@ -108,6 +110,10 @@ function App() {
     setUser(null);
     localStorage.removeItem('user'); // clear from localStorage on logout
   };
+
+  if (loading) {
+    return <p>Loading...</p>; // <-- show loader or spinner while checking localStorage
+  }
 
   return (
     <Router>
@@ -124,7 +130,7 @@ function App() {
           }
         />
 
-         <Route
+        <Route
           path="/about"
           element={
             user ? (
@@ -163,4 +169,3 @@ function App() {
 }
 
 export default App;
-
