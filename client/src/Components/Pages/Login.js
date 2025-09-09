@@ -288,25 +288,17 @@ function Login({ onLoginSuccess }) {
         localStorage.setItem("user", JSON.stringify(userData));
 
         // 2 seconds loading time
-        const elapsed = Date.now() - start;
-        const remaining = Math.max(0, 5000 - elapsed);
-        setTimeout(() => {
-          setLoading(false);
-          onLoginSuccess(userData);
+        setLoading(false);
+        onLoginSuccess(userData);
 
-          // 🔥 force refresh to home page after login
-          window.location.href = "/";
-        }, remaining);
+      // redirect immediately after login
+        window.location.href = "/";
       } else {
         throw new Error("Login failed: Missing token or user");
       }
     } catch (err) {
-      const elapsed = Date.now() - start;
-      const remaining = Math.max(0, 3000 - elapsed);
-      setTimeout(() => {
-        setError(err.response?.data?.message || 'Login failed');
-        setLoading(false);
-      }, remaining);
+      setError(err.response?.data?.message || 'Login failed');
+      setLoading(false);
     }
   };
 
