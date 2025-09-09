@@ -136,8 +136,11 @@ function ForgetPassword() {
 
       const url =
         method === 'old'
-          ? 'http://localhost:5000/api/users/reset-with-oldpass'
-          : 'http://localhost:5000/api/users/recover-password';
+          // ? 'http://localhost:5000/api/users/reset-with-oldpass'
+          // : 'http://localhost:5000/api/users/recover-password';
+
+          ? `${process.env.REACT_APP_API_BASE}/api/users/reset-with-oldpass`
+          : `${process.env.REACT_APP_API_BASE}/api/users/recover-password`;
 
       const res = await axios.post(url, payload);
 
